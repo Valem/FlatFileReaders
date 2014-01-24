@@ -340,5 +340,36 @@ namespace FlatFileReaders.Test
             SeparatedValueParser parser = new SeparatedValueParser(new MemoryStream(Encoding.Default.GetBytes(text)), options);
             parser.Read();
         }
+
+        [TestMethod]
+        public void TestRead_ZeroLengthColumn()
+        {
+            //---- Arrange -----------------------------------------------------
+            var text = @"104	20	1000	00	Lausanne	Lausanne	VD	2		0	130	5586	19880301";
+            var options = new SeparatedValueParserOptions { IsFirstRecordSchema = false, Separator = "\t" };
+            var schema = new Schema();
+            schema.AddColumn(new Int32Column("OnrpId"))
+                .AddColumn(new Int32Column("Type"))
+                .AddColumn(new Int32Column("ZipCode"))
+                .AddColumn(new StringColumn("ZipCodeAddOn"))
+                .AddColumn(new StringColumn("TownShortName"))
+                .AddColumn(new StringColumn("TownOfficialName"))
+                .AddColumn(new StringColumn("CantonAbbreviation"))
+                .AddColumn(new Int16Column("MainLanguageCode"))
+                .AddColumn(new Int16Column("OtherLanguageCode"))
+                .AddColumn(new ByteColumn("HasSortfileData"))
+                .AddColumn(new Int32Column("LetterServiceOnrpId"))
+                .AddColumn(new Int32Column("MunicipalityId"))
+                .AddColumn(new StringColumn("ValidFrom"));
+
+            var testee = new SeparatedValueParser(new MemoryStream(Encoding.GetEncoding(1252).GetBytes(text)), options);
+
+            //---- Act ---------------------------------------------------------
+            var result = testee.Read();
+
+            //---- Assert ------------------------------------------------------
+            Assert.IsNotNull(result);
+            Assert.AreEqual(13, testee.GetValues().Count());
+        }
     }
 }
