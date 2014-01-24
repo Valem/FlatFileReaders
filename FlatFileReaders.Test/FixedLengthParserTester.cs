@@ -163,8 +163,9 @@ namespace FlatFileReaders.Test
             var text = Encoding.Convert(Encoding.UTF8, Encoding.GetEncoding(1252), Encoding.UTF8.GetBytes(@"       123                   Müller 1/17/2014"));
             var schema = new FixedLengthSchema();
             schema.AddColumn(new Int32Column("id"), 10).AddColumn(new StringColumn("name"), 25).AddColumn(new DateTimeColumn("created"), 10);
+            var options = new FixedLengthParserOptions() { Encoding = Encoding.GetEncoding(1252) };
 
-            var testee = new FixedLengthParser(new MemoryStream(text), schema, Encoding.GetEncoding(1252));
+            var testee = new FixedLengthParser(new MemoryStream(text), schema, options);
             
             //---- Act ---------------------------------------------------------
             var result = testee.Read();
@@ -187,8 +188,9 @@ namespace FlatFileReaders.Test
             var text = Encoding.Convert(Encoding.UTF8, Encoding.GetEncoding(1251), Encoding.UTF8.GetBytes(@"       123                  Лучиано 1/17/2014"));
             var schema = new FixedLengthSchema();
             schema.AddColumn(new Int32Column("id"), 10).AddColumn(new StringColumn("name"), 25).AddColumn(new DateTimeColumn("created"), 10);
+            var options = new FixedLengthParserOptions() { Encoding = Encoding.GetEncoding(1251) };
 
-            var testee = new FixedLengthParser(new MemoryStream(text), schema, Encoding.GetEncoding(1251));
+            var testee = new FixedLengthParser(new MemoryStream(text), schema, options);
 
             //---- Act ---------------------------------------------------------
             var result = testee.Read();

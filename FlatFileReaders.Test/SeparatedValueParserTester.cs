@@ -195,9 +195,14 @@ namespace FlatFileReaders.Test
             var text = Encoding.Convert(Encoding.UTF8, Encoding.GetEncoding(1252), Encoding.UTF8.GetBytes(@"123;Müller;1/17/2014"));
             var schema = new Schema();
             schema.AddColumn(new Int32Column("id")).AddColumn(new StringColumn("name")).AddColumn(new DateTimeColumn("created"));
-            var options = new SeparatedValueParserOptions { IsFirstRecordSchema = false, Separator = ";" };
+            var options = new SeparatedValueParserOptions 
+            { 
+                IsFirstRecordSchema = false, 
+                Separator = ";" ,
+                Encoding = Encoding.GetEncoding(1252)
+            };
 
-            var testee = new SeparatedValueParser(new MemoryStream(text), schema, options, Encoding.GetEncoding(1252));
+            var testee = new SeparatedValueParser(new MemoryStream(text), schema, options);
 
             //---- Act ---------------------------------------------------------
             var result = testee.Read();
@@ -220,9 +225,14 @@ namespace FlatFileReaders.Test
             var text = Encoding.Convert(Encoding.UTF8, Encoding.GetEncoding(1251), Encoding.UTF8.GetBytes(@"123;Лучиано;1/17/2014"));
             var schema = new Schema();
             schema.AddColumn(new Int32Column("id")).AddColumn(new StringColumn("name")).AddColumn(new DateTimeColumn("created"));
-            var options = new SeparatedValueParserOptions { IsFirstRecordSchema = false, Separator = ";" };
+            var options = new SeparatedValueParserOptions 
+            { 
+                IsFirstRecordSchema = false, 
+                Separator = ";", 
+                Encoding = Encoding.GetEncoding(1251) 
+            };
 
-            var testee = new SeparatedValueParser(new MemoryStream(text), schema, options, Encoding.GetEncoding(1251));
+            var testee = new SeparatedValueParser(new MemoryStream(text), schema, options);
 
             //---- Act ---------------------------------------------------------
             var result = testee.Read();

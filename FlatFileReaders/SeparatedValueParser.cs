@@ -28,9 +28,8 @@ namespace FlatFileReaders
         /// Initializes a new instance of a SeparatedValueParser.
         /// </summary>
         /// <param name="fileName">The path of the file containing the records to parse.</param>
-        /// <param name="encoding">The encoding.</param>
-        public SeparatedValueParser(string fileName, Encoding encoding = null)
-            : this(File.OpenRead(fileName), null, new SeparatedValueParserOptions(), false, encoding)
+        public SeparatedValueParser(string fileName)
+            : this(File.OpenRead(fileName), null, new SeparatedValueParserOptions(), false)
         {
         }
 
@@ -39,10 +38,9 @@ namespace FlatFileReaders
         /// </summary>
         /// <param name="fileName">The path of the file containing the records to extract.</param>
         /// <param name="schema">The predefined schema for the records.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The schema is null.</exception>
-        public SeparatedValueParser(string fileName, Schema schema, Encoding encoding = null)
-            : this(File.OpenRead(fileName), schema, new SeparatedValueParserOptions(), true, encoding)
+        public SeparatedValueParser(string fileName, Schema schema)
+            : this(File.OpenRead(fileName), schema, new SeparatedValueParserOptions(), true)
         {
         }
 
@@ -51,10 +49,9 @@ namespace FlatFileReaders
         /// </summary>
         /// <param name="fileName">The path of the file containing the records to extract.</param>
         /// <param name="options">The options for configuring the parser's behavior.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The options object is null.</exception>
-        public SeparatedValueParser(string fileName, SeparatedValueParserOptions options, Encoding encoding = null)
-            : this(File.OpenRead(fileName), null, options, false, encoding)
+        public SeparatedValueParser(string fileName, SeparatedValueParserOptions options)
+            : this(File.OpenRead(fileName), null, options, false)
         {
         }
 
@@ -64,11 +61,10 @@ namespace FlatFileReaders
         /// <param name="fileName">The path of the file containing the records to extract.</param>
         /// <param name="schema">The predefined schema for the records.</param>
         /// <param name="options">The options for configuring the parser's behavior.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The schema is null.</exception>
-        /// <exception cref="System.ArgumentNullException">The schema is null.</exception>
-        public SeparatedValueParser(string fileName, Schema schema, SeparatedValueParserOptions options, Encoding encoding = null)
-            : this(File.OpenRead(fileName), schema, options, true, encoding)
+        /// <exception cref="System.ArgumentNullException">The options object is null.</exception>
+        public SeparatedValueParser(string fileName, Schema schema, SeparatedValueParserOptions options)
+            : this(File.OpenRead(fileName), schema, options, true)
         {
         }
 
@@ -76,10 +72,9 @@ namespace FlatFileReaders
         /// Initializes a new instance of a SeparatedValueParser.
         /// </summary>
         /// <param name="stream">A stream containing the records to parse.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        public SeparatedValueParser(Stream stream, Encoding encoding = null)
-            : this(stream, null, new SeparatedValueParserOptions(), false, encoding)
+        public SeparatedValueParser(Stream stream)
+            : this(stream, null, new SeparatedValueParserOptions(), false)
         {
         }
 
@@ -88,11 +83,10 @@ namespace FlatFileReaders
         /// </summary>
         /// <param name="stream">A stream containing the records to parse.</param>
         /// <param name="schema">The predefined schema for the records.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        public SeparatedValueParser(Stream stream, Schema schema, Encoding encoding = null)
-            : this(stream, schema, new SeparatedValueParserOptions(), true, encoding)
+        /// <exception cref="System.ArgumentNullException">The schema is null.</exception>
+        public SeparatedValueParser(Stream stream, Schema schema)
+            : this(stream, schema, new SeparatedValueParserOptions(), true)
         {
         }
 
@@ -101,11 +95,10 @@ namespace FlatFileReaders
         /// </summary>
         /// <param name="stream">A stream containing the records to parse.</param>
         /// <param name="options">The options for configuring the parser's behavior.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        public SeparatedValueParser(Stream stream, SeparatedValueParserOptions options, Encoding encoding = null)
-            : this(stream, null, options, false, encoding)
+        /// <exception cref="System.ArgumentNullException">The options is null.</exception>
+        public SeparatedValueParser(Stream stream, SeparatedValueParserOptions options)
+            : this(stream, null, options, false)
         {
         }
 
@@ -115,16 +108,15 @@ namespace FlatFileReaders
         /// <param name="stream">A stream containing the records to parse.</param>
         /// <param name="schema">The predefined schema for the records.</param>
         /// <param name="options">The options for configuring the parser's behavior.</param>
-        /// <param name="encoding">The encoding.</param>
         /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        /// <exception cref="System.ArgumentNullException">The stream is null.</exception>
-        public SeparatedValueParser(Stream stream, Schema schema, SeparatedValueParserOptions options, Encoding encoding = null)
-            : this(stream, schema, options, true, encoding)
+        /// <exception cref="System.ArgumentNullException">The schema is null.</exception>
+        /// <exception cref="System.ArgumentNullException">The options is null.</exception>
+        public SeparatedValueParser(Stream stream, Schema schema, SeparatedValueParserOptions options)
+            : this(stream, schema, options, true)
         {
         }
 
-        private SeparatedValueParser(Stream stream, Schema schema, SeparatedValueParserOptions options, bool hasSchema, Encoding encoding = null)
+        private SeparatedValueParser(Stream stream, Schema schema, SeparatedValueParserOptions options, bool hasSchema)
         {
             if (stream == null)
             {
@@ -138,12 +130,8 @@ namespace FlatFileReaders
             {
                 throw new ArgumentNullException("options");
             }
-            if (encoding == null)
-            {
-                encoding = Encoding.Default;
-            }
             this.stream = stream;
-            StreamReader reader = new StreamReader(stream, encoding);
+            StreamReader reader = new StreamReader(stream, options.Encoding ?? Encoding.Default);
             this.text = reader.ReadToEnd();
             regex = buildRegex(options.Separator);
             if (hasSchema)
